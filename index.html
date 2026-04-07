@@ -10,6 +10,14 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f9f9f9; color: #1a1a1a; overflow-x: hidden; }
         .font-serif { font-family: 'Cormorant Garamond', serif; }
+        /* Style for the disabled state */
+        .btn-disabled {
+            background-color: #d1d5db !important;
+            color: #9ca3af !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -42,18 +50,60 @@
             </p>
 
             <div class="flex flex-col items-center gap-4 mt-8 px-6">
-                <a href="Timdaraaffairs'26.png" 
-                   download="TimDara_Invitation"
-                   class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 font-bold tracking-[0.2em] text-white bg-black hover:bg-neutral-800 transition-all uppercase text-[11px] shadow-lg active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button id="downloadBtn" onclick="handleDownload()" 
+                        class="w-full sm:w-auto inline-flex items-center justify-center px-10 py-4 font-bold tracking-[0.2em] text-white bg-black hover:bg-neutral-800 transition-all uppercase text-[11px] shadow-lg active:scale-95">
+                    <svg id="downloadIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12 a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    Download Invitation
-                </a>
-                <p class="text-[9px] text-gray-400 italic">Saved directly to your device</p>
+                    <span id="btnText">Download Invitation</span>
+                </button>
+                <p id="statusMsg" class="text-[9px] text-gray-400 italic">Saved directly to your device</p>
             </div>
         </div>
     </section>
+
+    <script>
+        // Check if the user has already downloaded the file on page load
+        window.onload = function() {
+            if (localStorage.getItem('invitationDownloaded') === 'true') {
+                setButtonToDownloaded();
+            }
+        };
+
+        function handleDownload() {
+            // 1. Define your file (Ensure this name is correct in your folder!)
+            const filePath = 'Timdaraaffairs'26.png'; 
+            const fileName = 'TimDara_Invitation.png';
+
+            // 2. Trigger the download
+            const link = document.createElement('a');
+            link.href = filePath;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // 3. Save status to LocalStorage
+            localStorage.setItem('invitationDownloaded', 'true');
+
+            // 4. Update the UI
+            setButtonToDownloaded();
+        }
+
+        function setButtonToDownloaded() {
+            const btn = document.getElementById('downloadBtn');
+            const text = document.getElementById('btnText');
+            const icon = document.getElementById('downloadIcon');
+            const msg = document.getElementById('statusMsg');
+
+            // Disable button and change appearance
+            btn.onclick = null; // Remove click function
+            btn.classList.add('btn-disabled');
+            text.innerText = "Invitation Saved";
+            icon.style.display = "none";
+            msg.innerText = "You have already downloaded your copy.";
+        }
+    </script>
 
 </body>
 </html>
